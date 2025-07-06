@@ -3,27 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Device Details</title>
-  <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
-  <script>
-    const icons = {
-      wifi: lucide.createElement('Wifi'),
-      monitor: lucide.createElement('MonitorSmartphone'),
-      cpu: lucide.createElement('Cpu'),
-      hardDrive: lucide.createElement('HardDrive'),
-      activity: lucide.createElement('Activity'),
-      fingerprint: lucide.createElement('Fingerprint'),
-    };
+  <title>Device Info</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      background-color: #0b0b0b;
+      color: white;
+    }
+    .icon {
+      width: 28px;
+      height: 28px;
+    }
+    .fingerprint {
+      width: 22px;
+      height: 22px;
+    }
+  </style>
+</head>
+<body class="p-4">
+  <div id="device-info" class="max-w-md mx-auto bg-[#111] p-4 rounded-lg shadow-lg text-sm"></div>
 
+  <script>
     const state = {
-      systemInfo: {
-        connectionType: navigator.connection?.effectiveType || 'unknown',
-        browser: navigator.userAgent,
-        cores: navigator.hardwareConcurrency || 'N/A',
-        memory: navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'N/A',
-        buildDate: new Date().toDateString(),
-        uptime: '0 sec',
-      },
+      connectionType: navigator.connection?.effectiveType || 'Unknown',
+      browser: navigator.userAgent,
+      cores: navigator.hardwareConcurrency || 'N/A',
+      memory: navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'N/A',
+      buildDate: new Date().toDateString(),
+      uptime: '0 sec'
     };
 
     function calculateUptime() {
@@ -37,60 +45,52 @@
     function render() {
       const container = document.getElementById('device-info');
       container.innerHTML = `
-        <div class="grid grid-cols-2 gap-4 text-sm">
+        <div class="grid grid-cols-2 gap-4">
           <div class="flex items-center space-x-2">
-            <div class="w-6 h-6 text-blue-400">${icons.wifi}</div>
-            <span class="text-gray-300" style="font-weight: 200;">${state.systemInfo.connectionType}</span>
+            <i data-lucide="wifi" class="icon text-blue-400"></i>
+            <span class="text-gray-300 font-light">${state.connectionType}</span>
           </div>
           <div class="flex items-center space-x-2">
-            <div class="w-6 h-6 text-green-400">${icons.monitor}</div>
-            <span class="text-gray-300" style="font-weight: 200;">${state.systemInfo.browser}</span>
+            <i data-lucide="monitor-smartphone" class="icon text-green-400"></i>
+            <span class="text-gray-300 font-light">Browser</span>
+          </div>
+          <div class="flex items-center space-x-2 col-span-2">
+            <span class="text-gray-400 text-xs pl-8">${state.browser}</span>
           </div>
           <div class="flex items-center space-x-2">
-            <div class="w-6 h-6 text-purple-400">${icons.cpu}</div>
-            <span class="text-gray-300" style="font-weight: 200;">${state.systemInfo.cores}</span>
+            <i data-lucide="cpu" class="icon text-purple-400"></i>
+            <span class="text-gray-300 font-light">${state.cores} cores</span>
           </div>
           <div class="flex items-center space-x-2">
-            <div class="w-6 h-6 text-orange-400">${icons.hardDrive}</div>
-            <span class="text-gray-300" style="font-weight: 200;">${state.systemInfo.memory}</span>
+            <i data-lucide="hard-drive" class="icon text-orange-400"></i>
+            <span class="text-gray-300 font-light">${state.memory}</span>
           </div>
           <div class="flex items-center space-x-2">
-            <div class="w-6 h-6 text-yellow-400">${icons.activity}</div>
-            <span class="text-gray-300" style="font-weight: 200;">Build: ${state.systemInfo.buildDate}</span>
+            <i data-lucide="activity" class="icon text-yellow-400"></i>
+            <span class="text-gray-300 font-light">Build: ${state.buildDate}</span>
           </div>
           <div class="flex items-center space-x-2">
-            <div class="w-6 h-6 text-cyan-400">${icons.activity}</div>
-            <span class="text-gray-300" style="font-weight: 200;" data-uptime>${state.systemInfo.uptime}</span>
+            <i data-lucide="activity" class="icon text-cyan-400"></i>
+            <span class="text-gray-300 font-light" id="uptime-text">${state.uptime}</span>
           </div>
         </div>
         <div class="flex justify-center mt-6">
-          <div class="w-6 h-6 text-white">${icons.fingerprint}</div>
+          <i data-lucide="fingerprint" class="fingerprint text-white"></i>
         </div>
       `;
+
+      lucide.createIcons();
     }
 
-    function updateUptimeOnly() {
+    function updateUptime() {
       const uptime = calculateUptime();
-      state.systemInfo.uptime = uptime;
-      const el = document.querySelector('[data-uptime]');
-      if (el) el.textContent = uptime;
+      document.getElementById('uptime-text').textContent = uptime;
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
       render();
-      setInterval(updateUptimeOnly, 1000);
+      setInterval(updateUptime, 1000);
     });
   </script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      background: #0b0b0b;
-      color: white;
-      font-family: sans-serif;
-    }
-  </style>
-</head>
-<body class="p-6">
-  <div id="device-info" class="max-w-md mx-auto bg-gray-900 p-6 rounded-lg shadow-lg"></div>
 </body>
 </html>
