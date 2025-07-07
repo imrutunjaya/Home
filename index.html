@@ -1,4 +1,4 @@
-!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -98,6 +98,11 @@
         }
       }
 
+      @keyframes progressFill {
+        0% { width: 0%; }
+        100% { width: 100%; }
+      }
+
       .animate-fade-in { 
         animation: fadeIn 1s ease-out forwards; 
       }
@@ -120,6 +125,10 @@
       
       .animate-bounce { 
         animation: bounce 1s infinite; 
+      }
+
+      .animate-progress {
+        animation: progressFill 0.5s ease-out forwards;
       }
 
       /* Phase management with smooth transitions */
@@ -377,6 +386,7 @@
         width: 100vw;
         display: flex;
         flex-direction: column;
+        padding: 0;
       }
 
       /* Header positioning - responsive */
@@ -386,7 +396,7 @@
         left: 50%;
         transform: translateX(-50%);
         width: calc(100% - 2rem);
-        max-width: 48rem;
+        max-width: 56rem;
         z-index: 20;
       }
 
@@ -397,7 +407,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
         width: calc(100% - 2rem);
-        max-width: 80rem;
+        max-width: 90rem;
         z-index: 20;
         padding: 0;
       }
@@ -408,6 +418,7 @@
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
         gap: 1rem;
         text-align: center;
+        width: 100%;
       }
 
       .system-info-item {
@@ -420,11 +431,14 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.75rem;
         transition: all 0.3s ease;
+        min-height: 80px;
+        justify-content: center;
       }
 
       .system-info-item:hover {
         background: rgba(255, 255, 255, 0.08);
         border-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
       }
 
       .system-info-label {
@@ -433,6 +447,7 @@
         font-weight: 300;
         text-transform: uppercase;
         letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
       }
 
       .system-info-value {
@@ -449,18 +464,48 @@
         gap: 2rem;
         flex-wrap: wrap;
         margin-bottom: 2rem;
+        width: 100%;
+      }
+
+      /* Main status container - full width usage */
+      .status-main-container {
+        background: rgba(0,0,0,0.3);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        width: 100%;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
 
       /* Responsive breakpoints */
+      @media (max-width: 1024px) {
+        .header-container {
+          max-width: 48rem;
+        }
+        
+        .status-section-container {
+          max-width: 72rem;
+        }
+        
+        .system-info-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
       @media (max-width: 768px) {
         .header-container {
           top: 0.5rem;
           width: calc(100% - 1rem);
+          max-width: none;
         }
         
         .status-section-container {
           width: calc(100% - 1rem);
-          padding: 0;
+          max-width: none;
         }
         
         .status-cards-container {
@@ -475,9 +520,10 @@
         .text-3xl { font-size: 1.5rem; line-height: 2rem; }
         .text-xl { font-size: 1.125rem; line-height: 1.75rem; }
         
-        .p-8 { padding: 1.5rem; }
-        .px-8 { padding-left: 1.5rem; padding-right: 1.5rem; }
-        .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+        .status-main-container {
+          padding: 1.5rem;
+          min-height: 350px;
+        }
       }
 
       @media (max-width: 480px) {
@@ -498,9 +544,10 @@
           grid-template-columns: 1fr;
         }
         
-        .p-8 { padding: 1rem; }
-        .px-8 { padding-left: 1rem; padding-right: 1rem; }
-        .py-6 { padding-top: 1rem; padding-bottom: 1rem; }
+        .status-main-container {
+          padding: 1rem;
+          min-height: 300px;
+        }
       }
     </style>
   </head>
@@ -568,7 +615,7 @@
                 </div>
               </div>
               
-              <!-- System Info Grid - Responsive with Text Labels -->
+               <!-- System Info Grid - Responsive with Text Labels -->
               <div class="system-info-grid">
                 <div class="system-info-item">
                   <div class="system-info-label">Connection</div>
@@ -600,7 +647,7 @@
 
           <!-- Status Section - Full Responsive Layout -->
           <div class="status-section-container" id="status-section" style="display: none;">
-            <div style="background: rgba(0,0,0,0.3); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1);" class="rounded-3xl p-8">
+            <div class="status-main-container">
               
               <!-- Status Cards - Responsive Layout -->
               <div class="status-cards-container">
